@@ -1,0 +1,90 @@
+import PyPDF2
+
+# input your filepath with your pdf here so that we can convert it into a text file
+print('Hello! Welcome to our tool where we can assist you with finding questionnaires/scales within various medical articles!')
+print('Prior to using our tool, please make sure that you save your article as a PDF in a accessible location as this will be crucial.')
+print('Also, make sure that you know the filepath where the article is stored.')
+print('Let us begin!')
+
+print("Please enter your filepath here:")
+filepath = input()
+myFile = open('"'+filepath+'"', "rb")
+print("Please enter the name of your textfile here. Remember to add .txt at the end of it!")
+textfile_name = input()
+output_file = open('"'+textfile_name+'"', "w")
+pdfReader = PyPDF2.PdfFileReader(myFile)
+numOfPages = pdfReader.numPages
+for i in range(numOfPages):
+    page = pdfReader.getPage(i)
+    text = page.extractText()
+    output_file.write(text)
+output_file.close()
+myFile.close()
+
+# you can verify that this is correct, which will ensure that the code will work 
+# print("The number of pages in the pdf file is:", numOfPages)
+
+def search_str(file_path, word):
+    with open(file_path, 'r') as file:
+        # read all content of a file
+        content = file.read()
+        # check if string present in a file
+        if word in content:
+            print('There are strings/questionnaires present in the article.')
+        else:
+            print('Sorry, we could not find the scales/questionnaire within the article. Please try again, or try a different article.')
+
+# this was to verify that the keywords we are looking for was actually working
+# search_str(r'/Users/samithavasu/Desktop/hand.txt', 'Questionnaire')
+ 
+# this code looks for the keywords questionnaire or scale (either or both) and will present the search results to us
+word = 'Questionnaire'or'scale'
+with open(r'/Users/samithavasu/Desktop/output_article.txt', 'r') as fp:
+    # read all lines in a list
+    lines = fp.readlines()
+    for line in lines:
+        # check if string present on a current line
+        if line.find(word) != -1:
+            print('Here is the questionnaire/scale within the article and here is where you can find it.')
+            print('Line Number:', lines.index(line))
+            print('Line:', line)
+
+
+
+# this code is to display a summary of the article. Since the article is too long, we were trying to split it into pages and then use the 
+# cohere summary code to summarize what we wrote. However, we would need everything in the prompt part to be a string
+# which is not matching with the syntax that we are trying to use.
+
+
+#def getPage(fileName, numberOfLinesInAPage):
+
+ #   f = open('/Users/samithavasu/Desktop/output_article.txt')
+
+#    lines = (line.strip() for line in f)
+ #   pageBuffer = []
+  #  for lineNum, eachLine in enumerate(lines,1):
+   #     pageBuffer.append(eachLine)
+    #    if lineNum % numberOfLinesInAPage == 0:
+     #       yield pageBuffer
+      #      pageBuffer = []
+   # if pageBuffer:
+    #    yield pageBuffer    
+    #f.close()  
+    
+#for i in getPage('/Users/samithavasu/Desktop/output_article.txt', 100):
+ #   page1 = i
+
+#import cohere 
+#co = cohere.Client('axgrdYYWjhfma4WVfCeMBHwZD87Em7ND9v9nsZUB') 
+#response = co.generate( 
+#  model='xlarge', 
+#  prompt= page1 ,
+#  max_tokens=20, 
+#  temperature=0.8, 
+#  k=0, 
+#  p=1, 
+#  frequency_penalty=0, 
+#  presence_penalty=0, 
+#  stop_sequences=["--"], 
+#  return_likelihoods='NONE') 
+#print('Prediction: {}'.format(response.generations[0].text))
